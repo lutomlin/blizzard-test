@@ -157,6 +157,7 @@ def test4():
 def test5():
     # Test should be done last to stop throttling interfering with other tests
     # I'm not happy with this test as it is - it will not pass consistently, as I cannot rate-limit the messages accurately.
+    # It also requires some work to check all the X-Plan-Qps-Current values are there and in order, although that is secondary.
     '''Test 1/g/i - Test throttling feature with >100 requests/sec'''
     print '''Test 1/g/i - Test throttling feature with >100 requests/sec (using 200/sec)'''
     print LBR
@@ -220,6 +221,7 @@ def test5():
     print LBR
     
     #Count number of 200 vs 403 responses
+    print 'Checking responses...'
     n200 = 0
     n403 = 0
     for r in rs:
@@ -236,6 +238,7 @@ def test5():
         elif r.status_code == 403 and int(r.headers['X-Plan-Qps-Current']) <= 100:
             failed = True
             print 'Failure: r.status_code 403 with current Qps  <= 100 - {}'.format(r.headers['X-Plan-Qps-Current'])
+    print LBR
             
     if duration*rate > n200 > 100 * duration:
         #Not a failure, but not the ideal scenario.
@@ -265,6 +268,7 @@ def test5():
         max_current = max(max_current, int(r.headers['X-Plan-Qps-Current']))
         if r.headers['X-Plan-Qps-Current'] == '101':
             print 'Success: X-Plan-Qps-Current exceeded X-Plan-Qps-Allotted'
+            print LBR
             break
     else:
         failed = True
