@@ -186,6 +186,7 @@ def test5():
         #print 'Sending request'
         r = itemApiReq(item)
         rs.append(r)
+        #Uncomment here to watch the responses roll in with their Qps-Current number
         #print r.headers['X-Plan-Qps-Current']
         
     print 'Sending requests...'
