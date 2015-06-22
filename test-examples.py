@@ -40,7 +40,6 @@ def test1():
                 print LBR
             else:
                 failed = True
-                print LBR
                 print 'Failure: item {} data does not match'.format(item)
                 print 'Item Set data for item {}:'.format(itemdata['name'])
                 pprint(itemdata['itemSet'])
