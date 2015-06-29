@@ -29,7 +29,7 @@ def test1():
     '''Test 1/f/i/2 - Compare Item and Item Set data to make sure they match up.'''
     print 'Test 1/f/i/2 - Compare Item and Item Set data to make sure they match up.'
     
-    ### Ideally will check all items and item sets.
+    ### Ideally will check all items.
     
     print LBR
     failed = False
@@ -50,22 +50,24 @@ def test1():
                 pprint(setdata)
                 print LBR
     
-    item_set_list = [1060,] ## all item sets
-    for item_set in item_set_list:
-        setdata = json.loads(itemSetApiReq(item_set).content)
-        for item in setdata['items']:
-            itemdata = json.loads(itemApiReq(item).content)
-            if itemdata['itemSet'] == setdata:
-                print 'Success: item {} data matched'.format(item)
-                print LBR
-            else:
-                failed = True
-                print 'Failure: item {} data does not match'.format(item)
-                print 'Item Set data for item {}:'.format(itemdata['name'])
-                pprint(itemdata['itemSet'])
-                print 'Set data:'
-                pprint(setdata)
-                print LBR
+    #The corresponding test for all item sets (2/f/i/2)
+    
+    #item_set_list = [1060,] ## all item sets
+    #for item_set in item_set_list:
+    #    setdata = json.loads(itemSetApiReq(item_set).content)
+    #    for item in setdata['items']:
+    #        itemdata = json.loads(itemApiReq(item).content)
+    #        if itemdata['itemSet'] == setdata:
+    #            print 'Success: item {} data matched'.format(item)
+    #            print LBR
+    #        else:
+    #            failed = True
+    #            print 'Failure: item {} data does not match'.format(item)
+    #            print 'Item Set data for item {}:'.format(itemdata['name'])
+    #            pprint(itemdata['itemSet'])
+    #            print 'Set data:'
+    #            pprint(setdata)
+    #            print LBR
             
     return failed
 
