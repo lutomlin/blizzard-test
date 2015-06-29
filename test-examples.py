@@ -28,9 +28,12 @@ def itemSetApiReq(idx,locale='en_US',jsonp=''):
 def test1():
     '''Test 1/f/i/2 - Compare Item and Item Set data to make sure they match up.'''
     print 'Test 1/f/i/2 - Compare Item and Item Set data to make sure they match up.'
+    
+    ### Ideally will check all items and item sets.
+    
     print LBR
     failed = False
-    item_list = [76749, 76750, 76751, 76752, 76753]
+    item_list = [76749, 76750, 76751, 76752, 76753] ## all items
     for item in item_list:
         itemdata = json.loads(itemApiReq(item).content)
         if 'itemSet' in itemdata:
@@ -46,6 +49,24 @@ def test1():
                 print 'Set data:'
                 pprint(setdata)
                 print LBR
+    
+    item_set_list = [1060,] ## all item sets
+    for item_set in item_set_list:
+        setdata = json.loads(itemSetApiReq(item_set).content)
+        for item in setdata['items']:
+            itemdata = json.loads(itemApiReq(item).content)
+            if itemdata['itemSet'] == setdata:
+                print 'Success: item {} data matched'.format(item)
+                print LBR
+            else:
+                failed = True
+                print 'Failure: item {} data does not match'.format(item)
+                print 'Item Set data for item {}:'.format(itemdata['name'])
+                pprint(itemdata['itemSet'])
+                print 'Set data:'
+                pprint(setdata)
+                print LBR
+            
     return failed
 
     ###################################################################################################################
@@ -53,26 +74,29 @@ def test1():
 def test2():
     '''Test 1/b/i - Try an item ID that does not refer to an existing item.'''
     print 'Test 1/b/i - Try an item ID that does not refer to an existing item.'
+    
+    ### Ideally will try many non-working IDs.
+    
     print LBR
     failed = False
-    item = '00012'
-    r = itemApiReq(item)
-    content = json.loads(r.content)
-    if r.status_code != 404:
-        failed = True
-        print 'Failure: item ID {} gives status code {} instead of 404'.format(item,r.status_code)
-        print LBR
-    if r.reason != 'Not Found':
-        failed = True
-        print 'Failure: item ID {} gives reason {} instead of "Not Found"'.format(item,r.reason)
-        print LBR
-    if content['reason'] != 'unable to get item information.':
-        failed = True
-        print 'Failure: item ID {} gives body reason {}'.format(item,content['reason'])
-        print LBR
-    if r.status_code == 404 and r.reason == 'Not Found' and content['reason'] == 'unable to get item information.':
-        print 'Success: Invalid item ID {} gives a 404 Not Found error with the correct reason'.format(item)
-        print LBR
+    for item in ['00012','00000','01234']:
+        r = itemApiReq(item)
+        content = json.loads(r.content)
+        if r.status_code != 404:
+            failed = True
+            print 'Failure: item ID {} gives status code {} instead of 404'.format(item,r.status_code)
+            print LBR
+        if r.reason != 'Not Found':
+            failed = True
+            print 'Failure: item ID {} gives reason {} instead of "Not Found"'.format(item,r.reason)
+            print LBR
+        if content['reason'] != 'unable to get item information.':
+            failed = True
+            print 'Failure: item ID {} gives body reason {}'.format(item,content['reason'])
+            print LBR
+        if r.status_code == 404 and r.reason == 'Not Found' and content['reason'] == 'unable to get item information.':
+            print 'Success: Invalid item ID {} gives a 404 Not Found error with the correct reason'.format(item)
+            print LBR
     return failed
     
     ###################################################################################################################
@@ -81,6 +105,9 @@ def test3():
     '''Test 1/c/iii - Check each locale for valid returns.'''
     print 'Test 1/c/iii - Check each locale for valid returns.'
     print LBR
+    
+    ### Difficult to check the actual language of returned descriptions. Only checks Content-Language tag.
+    
     failed = False
     localelist = ['en_US',
                   'es_MX',
